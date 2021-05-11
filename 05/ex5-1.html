@@ -19,12 +19,12 @@
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
-            html = html + '<ul>';
+            html += '<ul>';
             for (var i = 0; i < objects.length; i++) {
-                var object = objects[i];
-                html = html + '<li>' + object.tweet + '</li>';
+                var object = objects[i];  // 配列が出る
+                html += `<li>${object.name}, ${object.tweet}, ${object.time}</li>`;
             }
-            html = html + '</ul>';
+            html += '</ul>';
             document.getElementById('result').innerHTML = html;
         }
     </script>
