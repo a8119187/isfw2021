@@ -13,6 +13,12 @@
         $(document).ready(function () {
             execSelect();
         });
+        async function deleteUser(userid) {
+            if (confirm("ユーザ" + userid + "を削除します")) {
+                var sql = `delete from Users where id = "${userid}"`
+                var objects = await osql.connect(sql);
+                console.log(objects);}
+        }
 
         async function execSelect() {
             var sql = 'select * from Users';
