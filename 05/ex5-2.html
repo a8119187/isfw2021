@@ -14,9 +14,8 @@
             doInsert();
             resetInputValue();
         }
-        function button2Pressed() {
-            doSelect();
-        }
+
+        setInterval(doSelect, 2000);
 
         $().ready(function () {
             doSelect();
@@ -31,7 +30,6 @@
             console.log(objects);
 
             document.getElementById('resultInsert').innerHTML = "tweetしました";
-            doSelect();
         }
 
         async function doSelect() {
