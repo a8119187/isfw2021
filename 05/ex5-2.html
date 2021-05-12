@@ -12,6 +12,7 @@
     <script>
         function button1Pressed() {
             doInsert();
+            resetInputValue();
         }
 
         async function doInsert() {
@@ -23,6 +24,10 @@
             console.log(objects);
 
             document.getElementById('result').innerHTML = "tweetしました";
+        }
+
+        function resetInputValue() {
+            document.getElementById('tf2').value = '';
         }
     </script>
 
