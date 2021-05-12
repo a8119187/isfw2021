@@ -13,11 +13,14 @@
         function button1Pressed() {
             doInsert();
             resetInputValue();
-            doSelect();  // 多分doInsert()の完了を持って実行するようにすべき
         }
         function button2Pressed() {
             doSelect();
         }
+
+        $().ready(function () {
+            doSelect();
+        });
 
         async function doInsert() {
             var userid = document.getElementById('tf1').value;
@@ -28,6 +31,7 @@
             console.log(objects);
 
             document.getElementById('resultInsert').innerHTML = "tweetしました";
+            doSelect();
         }
 
         async function doSelect() {
