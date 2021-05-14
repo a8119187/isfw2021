@@ -10,7 +10,36 @@
     <script type="text/javascript" src="../osql.js"></script>
 
     <script>
+        $(document).ready(function () {
+            execSelect();
+        });
+        async function followUser(toFollowUserid) {
+            // 自分のuserid
+            var userid = osql.getParam('userid');
+            // フォロー処理
+            if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
+                var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`
+                var objects = await osql.connect(sql);
+                console.log(objects);}
+        }
 
+        async function execSelect() {
+            var sql = 'select * from Users';
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            var html = '';
+            html = html + '<table border="1">';
+            for (var i = 0; i < objects.length; i++) {
+                html = html + '<tr>';
+                var object = objects[i];
+                html = html + '<td>' + object.id + '</td>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + `<button onclick="followUser('${object.id}')">フォロー</button>` + '</td>';
+                html = html + '</tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('result').innerHTML = html;
+        }
     </script>
 
 </head>
