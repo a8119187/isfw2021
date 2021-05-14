@@ -15,9 +15,9 @@
         });
 
         function init() {
-            var name = sessionStorage.getItem('username');
+            var username = sessionStorage.getItem('username');
             var userid = sessionStorage.getItem('userid');
-            // console.log("name = " + name);
+            // console.log("username = " + username);
             // console.log("userid = " + userid);
             // ようこその表示
             document.getElementById('welcome').innerHTML = `ようこそ${name}さん`;
@@ -25,7 +25,7 @@
             linkToUpdate = '<a href="update.html?userid=' + userid + '">ユーザー情報の変更</a>';
             document.getElementById('toUpdate').innerHTML = linkToUpdate;
             // ツイッターページへのリンク生成
-            linkToTweets = '<a href="tweets.html?userid=' + userid + '">ツイッターへ</a>';
+            linkToTweets = '<a href="tweets.html?username=' + username + '">ツイッターへ</a>';
             document.getElementById('totweets').innerHTML = linkToTweets;
         }
     </script>

@@ -23,7 +23,7 @@
         });
 
         function inputUsername(){
-            var username = sessionStorage.getItem('username');
+            var username = osql.getParam('username');
             document.getElementById('tf1').value = username;
         }
 
