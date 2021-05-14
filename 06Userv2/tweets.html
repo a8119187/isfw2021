@@ -19,7 +19,13 @@
 
         $().ready(function () {
             doSelect();
+            inputUsername();
         });
+
+        function inputUsername(){
+            var username = sessionStorage.getItem('username');
+            document.getElementById('tf1').value = username;
+        }
 
         async function doInsert() {
             var userid = document.getElementById('tf1').value;
