@@ -27,6 +27,9 @@
             // ツイッターページへのリンク生成
             linkToTweets = '<a href="tweets.html?username=' + username + '">ツイッターへ</a>';
             document.getElementById('totweets').innerHTML = linkToTweets;
+            // フォロー管理ページへのリンク生成
+            linkTofollows = '<a href="follows.html?userid=' + userid + '">フォロー管理へ</a>';
+            document.getElementById('tofollows').innerHTML = linkTofollows;
         }
     </script>
 
@@ -38,6 +41,7 @@
     <hr>
     <p id="toUpdate">xx</p>
     <p id="totweets">xx</p>
+    <p id="tofollows">xx</p>
 
 </body>
 

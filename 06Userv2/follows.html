@@ -13,9 +13,10 @@
         $(document).ready(function () {
             execSelect();
         });
+
         async function followUser(toFollowUserid) {
             // 自分のuserid
-            var userid = osql.getParam('userid');
+            var userid = await osql.getParam('userid');
             // フォロー処理
             if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
                 var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`
