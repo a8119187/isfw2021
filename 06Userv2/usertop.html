@@ -19,9 +19,14 @@
             var userid = sessionStorage.getItem('userid');
             // console.log("name = " + name);
             // console.log("userid = " + userid);
+            // ようこその表示
             document.getElementById('welcome').innerHTML = `ようこそ${name}さん`;
+            // ユーザー情報変更ページへのリンク生成
             linkToUpdate = '<a href="update.html?userid=' + userid + '">ユーザー情報の変更</a>';
             document.getElementById('toUpdate').innerHTML = linkToUpdate;
+            // ツイッターページへのリンク生成
+            linkToTweets = '<a href="tweets.html?userid=' + userid + '">ツイッターへ</a>';
+            document.getElementById('totweets').innerHTML = linkToTweets;
         }
     </script>
 
@@ -32,6 +37,7 @@
     <p id="welcome">ようこそxxさん</p>
     <hr>
     <p id="toUpdate">xx</p>
+    <p id="totweets">xx</p>
 
 </body>
 
