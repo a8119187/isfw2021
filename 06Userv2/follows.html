@@ -14,6 +14,10 @@
             execSelect();
         });
 
+        function pressFollowButton(objectId){
+            followUser(objectId);
+        }
+
         async function followUser(toFollowUserid) {
             // 自分のuserid
             var userid = await osql.getParam('userid');
@@ -21,7 +25,8 @@
             if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
                 var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`
                 var objects = await osql.connect(sql);
-                console.log(objects);}
+                console.log(objects);
+            }
         }
 
         async function execSelect() {
@@ -35,7 +40,7 @@
                 var object = objects[i];
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
-                html = html + '<td>' + `<button onclick="followUser('${object.id}')">フォロー</button>` + '</td>';
+                html = html + '<td>' + `<button onclick="pressFollowButton('${object.id}')">フォロー</button>` + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
