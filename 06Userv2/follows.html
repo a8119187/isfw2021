@@ -19,8 +19,9 @@
         var userid = getUserid();
 
         function getUserid() {
-            // 自分のuserid
-            var userid = osql.getParam('userid');
+            // 自分のuserid　ログインの意味がなくなるのでセッションで
+            var userid = sessionStorage.getItem("userid");
+            console.log("userid =", userid);
             return userid;
         }
 
