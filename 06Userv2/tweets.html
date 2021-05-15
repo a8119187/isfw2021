@@ -18,13 +18,20 @@
         setInterval(doSelect, 2000);
 
         $().ready(function () {
-            doSelect();
             inputUsername();
+            doSelect();
+            viewTimelineInfo();
+            doSelectMyTimeline();
         });
 
+        function getUserInfo() {
+            var loginUsername = sessionStorage.getItem("username");
+            var loginUserid = sessionStorage.getItem("userid");
+            return {"loginUsername" : loginUsername, "loginUserid" : loginUserid};
+        }
+
         function inputUsername(){
-            var username = sessionStorage.getItem("username");
-            document.getElementById('tf1').value = username;
+            document.getElementById('tf1').value = getUserInfo()["loginUsername"];
         }
 
         async function doInsert() {
@@ -55,6 +62,28 @@
             document.getElementById('resultView').innerHTML = html;
         }
 
+        async function doSelectMyTimeline() {
+            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Follows.fromid = '${getUserInfo()["loginUserid"]}';`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            var html = '';
+            html += '<table border="1">';
+            for (var i = 0; i < objects.length; i++) {
+                var object = objects[i];  // 配列が出る
+                html += '<tr>' + '<td>' + object.name + '</td>';
+                html += '<td>' + object.tweet + '</td>';
+                html += '<td>' + object.time + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            document.getElementById('resultMyView').innerHTML = html;
+        }
+
+        function viewTimelineInfo() {
+            var timelineInfo = getUserInfo()["loginUsername"] + "さんのTL";
+            document.getElementById('timelineInfo').innerHTML = timelineInfo;
+        }
+
         function resetInputValue() {
             document.getElementById('tf2').value = '';
         }
@@ -71,7 +100,11 @@
     <button onclick="button1Pressed()">tweet</button>
     <hr>
     <p id="resultInsert"></p>
+    <p>全体のTL<p>
     <p id="resultView"></p>
+    <br>
+    <p id="timelineInfo">XXさんのTL</p>
+    <p id="resultMyView"></p>
 
 </body>
 
