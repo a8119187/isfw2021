@@ -95,6 +95,41 @@
             }
             return alreadyFollowed;
         }
+
+        async function toggleFollowButton(objectName) {
+            var button = "";
+            if (await usersCheck(objectName) === false) {
+                button = "未登録";
+            }
+            else if (await followCheck(objectName)) {
+                button = `<button id="${objectName}Button" onclick="pressFollowButton('${objectName}')">フォロー済み</button>`;
+            }
+            else {
+                button = `<button id="${objectName}Button" onclick="pressFollowButton('${objectName}')">フォロー</button>`;
+            }
+            return button;
+        }
+
+        async function pressFollowButton(objectName){
+            alreadyFollowed = await followCheck(objectName);
+            if (alreadyFollowed) {
+                alert("すでにフォローしています");
+            }
+            else {
+                await followUser(objectName);
+                // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
+                document.getElementById(`${objectName}Button`).outerHTML = await toggleFollowButton(objectName);
+            }
+        }
+
+        async function followUser(toFollowUsername) {
+            // フォロー処理
+            if (confirm("ユーザ" + toFollowUsername + "をフォローします")) {
+                var sql = `insert into Follows values ('${getUserInfo()["loginUserid"]}', '${await getTweetInfo(toFollowUsername)}');`;
+                var objects = await osql.connect(sql);
+                console.log(objects);
+            }
+        }
         // ---------------------------------------------------------------------
 
 
