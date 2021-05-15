@@ -37,7 +37,7 @@
         }
 
         async function toggleFollowButton(objectId) {
-            var button = ""
+            var button = "";
             if (await followCheck(objectId)) {
                 button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー済み</button>`;
             }
@@ -55,7 +55,7 @@
             else {
                 followUser(objectId);
                 // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
-                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId)
+                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
         }
 
