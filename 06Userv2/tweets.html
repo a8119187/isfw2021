@@ -74,7 +74,27 @@
             return objects[0].id;
         }
 
+        async function usersCheck(tweetName) {
+            var registeredUsers  = false;
+            var sql = `select * from Tweets inner join Users on Users.name = Tweets.name where Users.name = "${tweetName}";`;
+            var objects = await osql.connect(sql);
+            if (objects.length) {
+                registeredUsers = true;
+            }
+            console.log(objects, registeredUsers);
+            return registeredUsers;
+        }
 
+        async function followCheck(toFollowUsername) {
+            var alreadyFollowed  = false;
+            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Tweets.name = "${toFollowUsername}" and Follows.fromid = "${getUserInfo()["loginUserid"]}";`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            if (objects.length) {
+                alreadyFollowed = true;
+            }
+            return alreadyFollowed;
+        }
         // ---------------------------------------------------------------------
 
 
