@@ -24,8 +24,26 @@
             return userid;
         }
 
-        function pressFollowButton(objectId){
-            followUser(objectId);
+        async function followCheck(toFollowUserid) {
+            var alreadyFollowed  = false;
+            var sql = `select toid from Follows where fromid = "${userid}" and toid = "${toFollowUserid}";`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            if (objects.length) {
+                alreadyFollowed = true;
+            }
+            return alreadyFollowed;
+        }
+
+        async function pressFollowButton(objectId){
+            alreadyFollowed = await followCheck(objectId);
+            if (alreadyFollowed) {
+                alert('すでにフォローしてます')
+            }
+            else {
+                followUser(objectId);
+                execSelect();
+            }
         }
 
         async function followUser(toFollowUserid) {
@@ -48,7 +66,7 @@
                 var object = objects[i];
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
-                html = html + '<td>' + checkFollow(object.id) + '</td>';
+                html = html + '<td>' + await followCheck(object.id) + '</td>';
                 html = html + '<td>' + `<button onclick="pressFollowButton('${object.id}')">フォロー</button>` + '</td>';
                 html = html + '</tr>';
             }
