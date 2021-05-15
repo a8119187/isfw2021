@@ -35,21 +35,33 @@
             return alreadyFollowed;
         }
 
+        async function toggleFollowButton(objectId) {
+            var button = ""
+            if (await followCheck(objectId)) {
+                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー済み</button>`;
+            }
+            else {
+                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー</button>`;
+            }
+            return button;
+        }
+
         async function pressFollowButton(objectId){
             alreadyFollowed = await followCheck(objectId);
             if (alreadyFollowed) {
-                alert('すでにフォローしてます')
+                alert("すでにフォローしています");
             }
             else {
                 followUser(objectId);
-                execSelect();
+                // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
+                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId)
             }
         }
 
         async function followUser(toFollowUserid) {
             // フォロー処理
             if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
-                var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`
+                var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`;
                 var objects = await osql.connect(sql);
                 console.log(objects);
             }
@@ -62,12 +74,11 @@
             var html = '';
             html = html + '<table border="1">';
             for (var i = 0; i < objects.length; i++) {
-                html = html + '<tr>';
                 var object = objects[i];
+                html = html + '<tr>';
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
-                html = html + '<td>' + await followCheck(object.id) + '</td>';
-                html = html + '<td>' + `<button onclick="pressFollowButton('${object.id}')">フォロー</button>` + '</td>';
+                html = html + '<td>' + await toggleFollowButton(object.id) + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
@@ -80,7 +91,6 @@
 <body>
     <h1>Follows</h1>
     <p id="users">xxxx</p>
-    <p id="follows">xxxx</p>
 </body>
 
 </html>
