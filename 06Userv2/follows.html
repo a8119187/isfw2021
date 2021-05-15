@@ -53,7 +53,7 @@
                 alert("すでにフォローしています");
             }
             else {
-                followUser(objectId);
+                await followUser(objectId);
                 // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
                 document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
