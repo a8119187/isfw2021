@@ -18,9 +18,9 @@
         // ログインユーザのuseridをグローバル変数に
         var userid = getUserid();
 
-        async function getUserid() {
+        function getUserid() {
             // 自分のuserid
-            var userid = await osql.getParam('userid');
+            var userid = osql.getParam('userid');
             return userid;
         }
 
@@ -29,8 +29,6 @@
         }
 
         async function followUser(toFollowUserid) {
-            // 自分のuserid
-            var userid = await osql.getParam('userid');
             // フォロー処理
             if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
                 var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`
