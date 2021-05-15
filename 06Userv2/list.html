@@ -17,7 +17,9 @@
             if (confirm("ユーザ" + userid + "を削除します")) {
                 var sql = `delete from Users where id = "${userid}"`
                 var objects = await osql.connect(sql);
-                console.log(objects);}
+                console.log(objects);
+                execSelect();
+            }
         }
 
         async function execSelect() {
