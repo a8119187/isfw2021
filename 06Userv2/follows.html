@@ -14,6 +14,16 @@
             execSelect();
         });
 
+
+        // ログインユーザのuseridをグローバル変数に
+        var userid = getUserid();
+
+        async function getUserid() {
+            // 自分のuserid
+            var userid = await osql.getParam('userid');
+            return userid;
+        }
+
         function pressFollowButton(objectId){
             followUser(objectId);
         }
@@ -40,11 +50,12 @@
                 var object = objects[i];
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + checkFollow(object.id) + '</td>';
                 html = html + '<td>' + `<button onclick="pressFollowButton('${object.id}')">フォロー</button>` + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
-            document.getElementById('result').innerHTML = html;
+            document.getElementById('users').innerHTML = html;
         }
     </script>
 
@@ -52,7 +63,8 @@
 
 <body>
     <h1>Follows</h1>
-    <p id="result">xxxx</p>
+    <p id="users">xxxx</p>
+    <p id="follows">xxxx</p>
 </body>
 
 </html>
