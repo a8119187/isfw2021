@@ -16,6 +16,7 @@
         }
 
         setInterval(doSelect, 2000);
+        setInterval(doSelectMyTimeline, 2000);
 
         $().ready(function () {
             inputUsername();
@@ -34,14 +35,16 @@
             document.getElementById('tf1').value = getUserInfo()["loginUsername"];
         }
 
+        function resetInputValue() {
+            document.getElementById('tf2').value = '';
+        }
+
         async function doInsert() {
             var userid = document.getElementById('tf1').value;
             var tweet = document.getElementById('tf2').value;
-
             var sql = `insert into Tweets (name, tweet, time) values("${userid}", "${tweet}", now());`;
             var objects = await osql.connect(sql);
             console.log(objects);
-
             document.getElementById('resultInsert').innerHTML = "tweetしました";
         }
 
@@ -56,14 +59,28 @@
                 html += '<tr>' + '<td>' + object.name + '</td>';
                 html += '<td>' + object.tweet + '</td>';
                 html += '<td>' + object.time + '</td>';
+                html += '<td>' + await toggleFollowButton(object.name) + '</td>';
                 html += '</tr>';
             }
             html += '</table>';
             document.getElementById('resultView').innerHTML = html;
         }
 
+        // -----------------------フォロー機能---------------------------------
+        async function getTweetInfo(tweetName) {
+            var sql = `select Users.id from Tweets inner join Users on Users.name = Tweets.name where Users.name = "${tweetName}";`;
+            var objects = await osql.connect(sql);
+            console.log(objects[0].id);
+            return objects[0].id;
+        }
+
+
+        // ---------------------------------------------------------------------
+
+
+        // --------------------------自分のタイムライン----------------------------
         async function doSelectMyTimeline() {
-            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Follows.fromid = '${getUserInfo()["loginUserid"]}';`;
+            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Follows.fromid = '${getUserInfo()["loginUserid"]}' order by time desc;`;
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
@@ -83,10 +100,7 @@
             var timelineInfo = getUserInfo()["loginUsername"] + "さんのTL";
             document.getElementById('timelineInfo').innerHTML = timelineInfo;
         }
-
-        function resetInputValue() {
-            document.getElementById('tf2').value = '';
-        }
+        // ---------------------------------------------------------------------
     </script>
 
 </head>
@@ -104,7 +118,7 @@
     <p id="resultView"></p>
     <br>
     <p id="timelineInfo">XXさんのTL</p>
-    <p id="resultMyView"></p>
+    <p id="resultMyView">未フォローです。</p>
 
 </body>
 
