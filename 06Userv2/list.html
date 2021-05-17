@@ -15,15 +15,22 @@
         });
         async function deleteUser(userid) {
             if (confirm("ユーザ" + userid + "を削除します")) {
-                var sql = `delete from Users where id = "${userid}"`
+                var sql = `delete from Users where id = "${userid}";`;
                 var objects = await osql.connect(sql);
                 console.log(objects);
+                deleteFollows(userid);
                 execSelect();
             }
         }
 
+        async function deleteFollows(userid) {
+            var sql = `delete from Follows where fromid = "${userid}";`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+        }
+
         async function execSelect() {
-            var sql = 'select * from Users';
+            var sql = 'select * from Users;';
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
