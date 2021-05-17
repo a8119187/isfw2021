@@ -87,7 +87,7 @@
             for (var i = 0; i < objects.length; i++) {
                 var object = objects[i];
                 html = html + '<tr>';
-                html = html + '<td>' + object.id + '</td>';
+                html = html + '<td>@' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + await toggleFollowButton(object.id) + '</td>';
                 html = html + '</tr>';
