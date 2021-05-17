@@ -50,7 +50,9 @@
         async function pressFollowButton(objectId){
             alreadyFollowed = await followCheck(objectId);
             if (alreadyFollowed) {
-                alert("すでにフォローしています");
+                // alert("すでにフォローしています");
+                await unFollowUser(objectId);
+                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
             else {
                 await followUser(objectId);
@@ -63,6 +65,14 @@
             // フォロー処理
             if (confirm("ユーザ" + toFollowUserid + "をフォローします")) {
                 var sql = `insert into Follows values ('${userid}', '${toFollowUserid}');`;
+                var objects = await osql.connect(sql);
+                console.log(objects);
+            }
+        }
+
+        async function unFollowUser(toUnFollowUserid) {
+            if (confirm("ユーザ" + toUnFollowUserid + "をフォロー解除します")) {
+                var sql = `delete from Follows where fromid = "${userid}" and toid = "${toUnFollowUserid}";`;
                 var objects = await osql.connect(sql);
                 console.log(objects);
             }
