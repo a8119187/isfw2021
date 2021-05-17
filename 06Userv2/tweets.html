@@ -63,7 +63,23 @@
                 html += '</tr>';
             }
             html += '</table>';
-            document.getElementById('resultView').innerHTML = html;
+
+            // 差分があればHTMLを更新
+            if (diffCheck(html)) {
+                document.getElementById('resultView').innerHTML = html;
+            }
+        }
+
+        function diffCheck(newHtml) {
+            var diff = document.getElementById('resultView').innerHTML;
+            diff = diff.replace('<tbody>', '').replace('</tbody>', '');
+            if (!(diff === newHtml)) {
+                console.log('差分あり');
+                return true;
+            }
+            else {
+                console.log('差分なし');
+            }
         }
 
         // -----------------------フォロー機能---------------------------------
