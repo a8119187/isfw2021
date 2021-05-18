@@ -168,7 +168,11 @@
                 html += '</tr>';
             }
             html += '</table>';
-            document.getElementById('resultMyView').innerHTML = html;
+
+            // 差分があればHTMLを更新
+            if (diffCheck(html, 'resultMyView')) {
+                document.getElementById('resultMyView').innerHTML = html;
+            }
         }
 
         function viewTimelineInfo() {
