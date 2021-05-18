@@ -20,7 +20,7 @@
 
         $().ready(function () {
             inputUserid();  // ユーザidをテキストボックスに入れる
-            doSelect();
+            doSelect(); 
             viewTimelineInfo();
             doSelectMyTimeline();
         });
@@ -65,13 +65,13 @@
             html += '</table>';
 
             // 差分があればHTMLを更新
-            if (diffCheck(html)) {
+            if (diffCheck(html, 'resultView')) {
                 document.getElementById('resultView').innerHTML = html;
             }
         }
 
-        function diffCheck(newHtml) {
-            var diff = document.getElementById('resultView').innerHTML;
+        function diffCheck(newHtml, oldTableId) {
+            var diff = document.getElementById(oldTableId).innerHTML;
             diff = diff.replace('<tbody>', '').replace('</tbody>', '');
             if (!(diff === newHtml)) {
                 console.log('差分あり');
@@ -84,27 +84,20 @@
         }
 
         // -----------------------フォロー機能---------------------------------
-        async function getTweetInfo(tweetName) {
-            var sql = `select Users.id from Tweets inner join Users on Users.name = Tweets.name where Users.name = "${tweetName}";`;
-            var objects = await osql.connect(sql);
-            console.log(objects[0].id);
-            return objects[0].id;
-        }
-
         async function usersCheck(tweetName) {
             var registeredUsers  = false;
-            var sql = `select * from Tweets inner join Users on Users.name = Tweets.name where Users.name = "${tweetName}";`;
+            var sql = `select * from Users where id = "${tweetName}";`;
             var objects = await osql.connect(sql);
             if (objects.length) {
                 registeredUsers = true;
             }
-            console.log(objects, registeredUsers);
+            console.log(objects);
             return registeredUsers;
         }
 
-        async function followCheck(toFollowUsername) {
+        async function followCheck(toFollowUserid) {
             var alreadyFollowed  = false;
-            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Tweets.name = "${toFollowUsername}" and Follows.fromid = "${getUserInfo()["loginUserid"]}";`;
+            var sql = `select toid from Follows where fromid = "${getUserInfo()["loginUserid"]}" and toid = "${toFollowUserid}";`;
             var objects = await osql.connect(sql);
             console.log(objects);
             if (objects.length) {
@@ -113,36 +106,46 @@
             return alreadyFollowed;
         }
 
-        async function toggleFollowButton(objectName) {
+        async function toggleFollowButton(objectId) {
             var button = "";
-            if (await usersCheck(objectName) === false) {
+            if (await usersCheck(objectId) === false) {
                 button = "未登録";
             }
-            else if (await followCheck(objectName)) {
-                button = `<button id="${objectName}Button" onclick="pressFollowButton('${objectName}')">フォロー済み</button>`;
+            else if (await followCheck(objectId)) {
+                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー済み</button>`;
             }
             else {
-                button = `<button id="${objectName}Button" onclick="pressFollowButton('${objectName}')">フォロー</button>`;
+                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー</button>`;
             }
             return button;
         }
 
-        async function pressFollowButton(objectName){
-            alreadyFollowed = await followCheck(objectName);
+        async function pressFollowButton(objectId){
+            alreadyFollowed = await followCheck(objectId);
             if (alreadyFollowed) {
-                alert("すでにフォローしています");
+                // alert("すでにフォローしています");
+                await unFollowUser(objectId);
+                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
             else {
-                await followUser(objectName);
+                await followUser(objectId);
                 // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
-                document.getElementById(`${objectName}Button`).outerHTML = await toggleFollowButton(objectName);
+                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
         }
 
-        async function followUser(toFollowUsername) {
+        async function followUser(toFollowUserId) {
             // フォロー処理
-            if (confirm("ユーザ" + toFollowUsername + "をフォローします")) {
-                var sql = `insert into Follows values ('${getUserInfo()["loginUserid"]}', '${await getTweetInfo(toFollowUsername)}');`;
+            if (confirm("ユーザ" + toFollowUserId + "をフォローします")) {
+                var sql = `insert into Follows values ('${getUserInfo()["loginUserid"]}', '${toFollowUserId}');`;
+                var objects = await osql.connect(sql);
+                console.log(objects);
+            }
+        }
+
+        async function unFollowUser(toUnFollowUserid) {
+            if (confirm("ユーザ" + toUnFollowUserid + "をフォロー解除します")) {
+                var sql = `delete from Follows where fromid = "${getUserInfo()["loginUserid"]}" and toid = "${toUnFollowUserid}";`;
                 var objects = await osql.connect(sql);
                 console.log(objects);
             }
@@ -152,7 +155,7 @@
 
         // --------------------------自分のタイムライン----------------------------
         async function doSelectMyTimeline() {
-            var sql = `select * from (Tweets inner join Users on Users.name = Tweets.name) inner join Follows on Follows.toid = Users.id where Follows.fromid = '${getUserInfo()["loginUserid"]}' order by time desc;`;
+            var sql = `select * from Tweets inner join Follows on Follows.toid = Tweets.name where Follows.fromid = '${getUserInfo()["loginUserid"]}' order by time desc;`;
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
@@ -191,7 +194,6 @@
     <br>
     <p id="timelineInfo">XXさんのTL</p>
     <p id="resultMyView">未フォローです。</p>
-
 </body>
 
 </html>
