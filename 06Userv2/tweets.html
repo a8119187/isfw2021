@@ -19,7 +19,7 @@
         setInterval(doSelectMyTimeline, 2000);
 
         $().ready(function () {
-            inputUsername();
+            inputUserid();  // ユーザidをテキストボックスに入れる
             doSelect();
             viewTimelineInfo();
             doSelectMyTimeline();
@@ -31,7 +31,7 @@
             return {"loginUsername" : loginUsername, "loginUserid" : loginUserid};
         }
 
-        function inputUsername(){
+        function inputUserid(){
             document.getElementById('tf1').value = getUserInfo()["loginUserid"];
         }
 
