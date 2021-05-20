@@ -20,7 +20,7 @@
 
         $().ready(function () {
             inputUserid();  // ユーザidをテキストボックスに入れる
-            doSelect(); 
+            doSelect();
             viewTimelineInfo();
             doSelectMyTimeline();
         });
@@ -48,26 +48,40 @@
             document.getElementById('resultInsert').innerHTML = "tweetしました";
         }
 
+        var tweetsObject = "";  // Tweetsを保管する
         async function doSelect() {
             var sql = 'select * from Tweets order by time desc limit 20';
             var objects = await osql.connect(sql);
             console.log(objects);
-            var html = '';
-            html += '<table border="1">';
-            for (var i = 0; i < objects.length; i++) {
-                var object = objects[i];  // 配列が出る
-                html += '<tr>' + '<td>' + object.name + '</td>';
-                html += '<td>' + object.tweet + '</td>';
-                html += '<td>' + object.time + '</td>';
-                html += '<td>' + await toggleFollowButton(object.name) + '</td>';
-                html += '</tr>';
-            }
-            html += '</table>';
+            if (!(listDiffCheck(objects, tweetsObject))) {
+                var html = '';
+                html += '<table border="1">';
+                for (var i = 0; i < objects.length; i++) {
+                    var object = objects[i];  // 配列が出る
+                    html += '<tr>' + '<td>' + object.name + '</td>';
+                    html += '<td>' + object.tweet + '</td>';
+                    html += '<td>' + object.time + '</td>';
+                    html += '<td>' + await toggleFollowButton(object.name) + '</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                console.log('html', html.slice(0,100) + '....');
 
-            // 差分があればHTMLを更新
-            if (diffCheck(html, 'resultView')) {
-                document.getElementById('resultView').innerHTML = html;
+                // 差分があればHTMLを更新
+                if (diffCheck(html, 'resultView')) {
+                    document.getElementById('resultView').innerHTML = html;
+                }
             }
+            tweetsObject = objects;
+        }
+
+        function listDiffCheck(list1, list2) {
+            // 比較して等しければtrueを返す
+            var result = false;
+            if (JSON.stringify(list1) == JSON.stringify(list2)) {
+                result = true;
+            }
+            return result;
         }
 
         function diffCheck(newHtml, oldTableId) {
