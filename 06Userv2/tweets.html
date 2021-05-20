@@ -126,10 +126,10 @@
                 button = "未登録";
             }
             else if (await followCheck(objectId)) {
-                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー済み</button>`;
+                button = `<button class="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー済み</button>`;
             }
             else {
-                button = `<button id="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー</button>`;
+                button = `<button class="${objectId}Button" onclick="pressFollowButton('${objectId}')">フォロー</button>`;
             }
             return button;
         }
@@ -139,12 +139,14 @@
             if (alreadyFollowed) {
                 // alert("すでにフォローしています");
                 await unFollowUser(objectId);
-                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
             }
             else {
                 await followUser(objectId);
-                // 表の更新（フォローボタンのみ）　execSelect()でもいいけど表全体を読み込み直すのは将来的によくなさそう
-                document.getElementById(`${objectId}Button`).outerHTML = await toggleFollowButton(objectId);
+            }
+            // 表の更新（フォローボタンのみ）
+            var classButtons = document.getElementsByClassName(`${objectId}Button`);
+            for (var i = 0; i < classButtons.length; i++) {
+                classButtons[i].outerHTML = await toggleFollowButton(objectId);
             }
         }
 
