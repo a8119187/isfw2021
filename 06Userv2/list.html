@@ -47,12 +47,23 @@
             html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
+
+        function delButttonPressed(){
+            var tf1Value = document.getElementById('tf1').value;
+            deleteUser(tf1Value);
+        }
+
+        function resetInputValue(id) {
+            document.getElementById(id).value = '';
+        }
     </script>
 
 </head>
 
 <body>
     <h1>Users</h1>
+    ID:<input id="tf1">
+    <button onclick="delButttonPressed()">削除</button>
     <p id="result">xxxx</p>
 </body>
 
