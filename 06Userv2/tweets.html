@@ -11,18 +11,18 @@
 
     <script>
         function button1Pressed() {
-            doInsert();
-            resetInputValue();
+            doInsert();             // ツイートする
+            resetInputValue();      // ツイートのテキストフィールドを削除
         }
 
         setInterval(doSelect, 2000);
         setInterval(doSelectMyTimeline, 2000);
 
         $().ready(function () {
-            inputUserid();  // ユーザidをテキストボックスに入れる
-            doSelect();
-            viewTimelineInfo();
-            doSelectMyTimeline();
+            inputUserid();          // ユーザidをテキストボックスに入れる
+            doSelect();             // 全てのツイートを表形式で表示
+            viewTimelineInfo();     // 誰のタイムラインかを表示
+            doSelectMyTimeline();   // 自分のタイムライン表形式でを表示
         });
 
         function getUserInfo() {
